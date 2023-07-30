@@ -8,7 +8,7 @@ const router = useRouter();
 const code = route.query.code as string;
 
 const accessToken = await getAcessToken(code);
-const profile = await fetchProfile();
+const profile = await fetchProfile(accessToken);
 
 router.push("/");
 </script>
