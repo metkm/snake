@@ -1,8 +1,8 @@
 import { Scene, PerspectiveCamera, Vector3, WebGLRenderer, BoxGeometry, MeshBasicMaterial, Mesh } from "three";
 import { createTailHead, setupKeyEvents } from "./player";
 
-export const TILECOUNT = 10;
-export const UNITSIZE = TILECOUNT / 20;
+export const TILECOUNT = 5;
+export const UNITSIZE = TILECOUNT / 10;
 
 export const setup = () => {
   const scene = new Scene();
