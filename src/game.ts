@@ -12,6 +12,8 @@ export const TILECOUNT = 10;
 export const UNITSIZE = 0.5;
 export const TILELIMIT = TILECOUNT * UNITSIZE;
 
+type Fn = <G extends BufferGeometry, M extends Material>(block: Mesh<G, M>) => void;
+
 export const createCube = (
   width: number = UNITSIZE,
   height: number = UNITSIZE,
@@ -51,9 +53,7 @@ export const setup = () => {
   }
 };
 
-export const moveCubeRandom = <G extends BufferGeometry, M extends Material>(
-  cube: Mesh<G, M>
-) => {
+export const moveCubeRandom: Fn = (cube) => {
   let foodX = Math.round(Math.random() * TILELIMIT);
   let foodZ = Math.round(Math.random() * TILELIMIT);
 
@@ -63,9 +63,7 @@ export const moveCubeRandom = <G extends BufferGeometry, M extends Material>(
   return cube;
 };
 
-export const wrap = <G extends BufferGeometry, M extends Material>(
-  block: Mesh<G, M>
-) => {
+export const wrap: Fn = (block) => {
   if (block.position.x < -TILELIMIT) {
     block.position.x = TILELIMIT;
   }
