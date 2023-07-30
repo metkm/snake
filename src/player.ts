@@ -1,10 +1,10 @@
 import { BoxGeometry, MeshBasicMaterial, Mesh, Vector3 } from "three";
-import { SPEED } from "./game";
+import { UNITSIZE } from "./game";
 
 export let velocity = new Vector3(0, 0, 0);
 
 export const createTailHead = () => {
-  const geometry = new BoxGeometry(1, 1, 1);
+  const geometry = new BoxGeometry(UNITSIZE, UNITSIZE, UNITSIZE);
   const material = new MeshBasicMaterial({ color: "blue" });
   const cube = new Mesh(geometry, material);
 
@@ -18,16 +18,16 @@ export const setupKeyEvents = () => {
 export const keyEvents = ({ code }: KeyboardEvent) => {
   switch (code) {
     case "KeyW":
-      velocity.set(0, 0, -SPEED);
+      velocity.set(0, 0, -UNITSIZE);
       break;
     case "KeyS":
-      velocity.set(0, 0, SPEED);
+      velocity.set(0, 0, UNITSIZE);
       break;
     case "KeyA":
-      velocity.set(-SPEED, 0, 0);
+      velocity.set(-UNITSIZE, 0, 0);
       break;
     case "KeyD":
-      velocity.set(SPEED, 0, 0);
+      velocity.set(UNITSIZE, 0, 0);
       break;
   }
 }

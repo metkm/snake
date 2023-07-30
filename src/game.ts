@@ -1,8 +1,8 @@
 import { Scene, PerspectiveCamera, Vector3, WebGLRenderer, BoxGeometry, MeshBasicMaterial, Mesh } from "three";
 import { createTailHead, setupKeyEvents } from "./player";
 
-export const SIZE = 8;
-export const SPEED = 0.05;
+export const TILECOUNT = 10;
+export const UNITSIZE = TILECOUNT / 20;
 
 export const setup = () => {
   const scene = new Scene();
@@ -29,15 +29,15 @@ export const setup = () => {
 }
 
 export const moveFood = (cube: Mesh<BoxGeometry, MeshBasicMaterial>) => {
-  let foodX = Math.floor(Math.random() * SIZE);
-  let foodZ = Math.floor(Math.random() * SIZE);
+  let foodX = Math.floor(Math.random() * TILECOUNT);
+  let foodZ = Math.floor(Math.random() * TILECOUNT);
 
   cube.position.x = foodX;
   cube.position.z = foodZ;
 }
 
 export const createFood = () => {
-  const geometry = new BoxGeometry(0.5, 0.5, 0.5);
+  const geometry = new BoxGeometry(UNITSIZE, UNITSIZE, UNITSIZE);
   const material = new MeshBasicMaterial({ color: "red" });
   const cube = new Mesh(geometry, material);
 
