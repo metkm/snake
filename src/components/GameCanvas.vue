@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BoxGeometry, GridHelper, MeshBasicMaterial, Mesh } from "three";
+import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 
 import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { velocity } from "../player";
@@ -8,8 +8,8 @@ import { velocity } from "../player";
 let { camera, renderer, scene, head } = setup();
 
 const orbit = new OrbitControls(camera, renderer.domElement);
-const gridHelper = new GridHelper(10, 10);
-scene.add(gridHelper);
+// const gridHelper = new GridHelper(10, 10);
+// scene.add(gridHelper);
 
 const didEat = () => {
   return (
@@ -25,7 +25,7 @@ const trail = [head];
 const history = [velocity];
 
 let nextTick = false;
-let nextBlock: Mesh<BoxGeometry, MeshBasicMaterial> | undefined = undefined;
+let nextBlock: Mesh<BoxGeometry, MeshStandardMaterial> | undefined = undefined;
 
 const handleMoves = () => {
   history.push(velocity.clone());

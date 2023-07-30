@@ -1,13 +1,10 @@
-import { BoxGeometry, MeshBasicMaterial, Mesh, Vector3 } from "three";
-import { UNITSIZE } from "./game";
+import { Vector3 } from "three";
+import { UNITSIZE, createCube } from "./game";
 
 export let velocity = new Vector3(0, 0, 0);
 
 export const createTailHead = () => {
-  const geometry = new BoxGeometry(UNITSIZE, UNITSIZE, UNITSIZE);
-  const material = new MeshBasicMaterial({ color: "blue" });
-  const cube = new Mesh(geometry, material);
-
+  const cube = createCube(UNITSIZE, UNITSIZE, UNITSIZE, "#be185d");
   return cube;
 }
 
