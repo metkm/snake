@@ -2,7 +2,7 @@
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { BoxGeometry, GridHelper, MeshBasicMaterial, Mesh } from "three";
 
-import { setup, createFood, moveFood, TILECOUNT } from "../game";
+import { setup, moveCubeRandom, TILECOUNT, createCube } from "../game";
 import { velocity } from "../player";
 
 const { camera, renderer, scene, head } = setup();
@@ -25,23 +25,47 @@ const wrap = (head: Mesh<BoxGeometry, MeshBasicMaterial>) => {
   }
 }
 
-const food = createFood();
+const food = createCube();
+moveCubeRandom(food);
 scene.add(food);
 
+const trail = [head];
+const history = [velocity];
+
 const handleMoves = () => {
-  head.position.x += velocity.x;
-  head.position.z += velocity.z;
-  wrap(head);
+  history.push(velocity.clone());
+  
+  while (history.length > trail.length) {
+    history.shift();
+  }
+
+  for (let index = 0; index < trail.length; index++) {
+    let block = trail[index];
+    let move = history[index];
+
+    block.position.x += move.x;
+    block.position.z += move.z;
+
+    wrap(block);
+  }
 
   if (
     head.position.x === food.position.x &&
     head.position.z === food.position.z
   ) {
-    moveFood(food);
+    let block = head.clone();
+    block.position.x -= velocity.x * trail.length;
+    block.position.z -= velocity.z * trail.length;
+
+    scene.add(block);
+    trail.splice(0, 0, block);
+
+    moveCubeRandom(food);
   }
+  
 }
 
-setInterval(handleMoves, 1000 / 5);
+setInterval(handleMoves, 1000 / 8);
 
 const render = () => {
   requestAnimationFrame(render);

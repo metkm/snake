@@ -28,12 +28,22 @@ export const setup = () => {
   }
 }
 
-export const moveFood = (cube: Mesh<BoxGeometry, MeshBasicMaterial>) => {
+export const createCube = () => {
+  const geometry = new BoxGeometry(UNITSIZE, UNITSIZE, UNITSIZE);
+  const material = new MeshBasicMaterial({ color: "red" });
+  const cube = new Mesh(geometry, material);
+
+  return cube;
+}
+
+export const moveCubeRandom = (cube: Mesh<BoxGeometry, MeshBasicMaterial>) => {
   let foodX = Math.round(Math.random() * TILECOUNT);
   let foodZ = Math.round(Math.random() * TILECOUNT);
 
   cube.position.x = foodX;
   cube.position.z = foodZ;
+
+  return cube;
 }
 
 export const createFood = () => {
@@ -41,7 +51,7 @@ export const createFood = () => {
   const material = new MeshBasicMaterial({ color: "red" });
   const cube = new Mesh(geometry, material);
 
-  moveFood(cube);
+  moveCubeRandom(cube);
 
   return cube;
 }
