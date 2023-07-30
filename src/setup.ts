@@ -1,7 +1,9 @@
-import { Scene, WebGLRenderer, PerspectiveCamera, DirectionalLight, PCFSoftShadowMap, Vector3 } from "three";
+import { Scene, WebGLRenderer, PerspectiveCamera, DirectionalLight, PCFSoftShadowMap, Vector3, Color } from "three";
 
 export const initScene = () => {
   const scene = new Scene();
+
+  scene.background = new Color("#917C78");
 
   return scene;
 }
