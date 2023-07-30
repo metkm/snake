@@ -2,7 +2,12 @@
 import { ref, onMounted } from "vue";
 import { redirectToAuthFlow } from '../spotify';
 
+import { storeToRefs } from "pinia";
+import { useProfileStore } from "../store";
+
 const href = ref("");
+const profileStore = useProfileStore();
+const { profile } = storeToRefs(profileStore);
 
 onMounted(async () => {
   href.value = await redirectToAuthFlow();
@@ -10,7 +15,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="fixed bottom-5 right-5">
-    <a :href="href" class="px-6 py-3 bg-slate-500 font-semibold rounded-lg text-white">Login with Spotify</a>
+  <div class="fixed bottom-5 right-5 p-2 rounded-lg bg-slate-500 text-white">
+    <a v-if="!profile" :href="href" class="font-semibold rounded-lg px-4">Login with Spotify</a>
+    <div v-else class="flex gap-2 items-center pr-2">
+      <img :src="profile.images[0].url" width="50" height="50" class="rounded" />
+      <p>{{ profile.display_name }}</p>
+    </div>
   </div>
 </template>

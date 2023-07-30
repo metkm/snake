@@ -51,8 +51,11 @@ export const getAcessToken = async (code: string) => {
     body: params
   });
 
-  const { access_token } = await response.json();
-  return access_token;
+  const { access_token, refresh_token }: { access_token: string, refresh_token: string } = await response.json();
+  return {
+    accessToken: access_token,
+    refreshToken: refresh_token
+  }
 }
 
 export const fetchProfile = async (token: string) => {
