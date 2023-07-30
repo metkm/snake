@@ -55,3 +55,21 @@ export const createFood = () => {
 
   return cube;
 }
+
+export const wrap = (block: Mesh<BoxGeometry, MeshBasicMaterial>) => {
+  if (block.position.x < -TILECOUNT) {
+    block.position.x = TILECOUNT;
+  }
+
+  if (block.position.x > TILECOUNT) {
+    block.position.x = -TILECOUNT;
+  }
+
+  if (block.position.z > TILECOUNT) {
+    block.position.z = -TILECOUNT;
+  }
+
+  if (block.position.z < -TILECOUNT) {
+    block.position.z = TILECOUNT;
+  }
+}

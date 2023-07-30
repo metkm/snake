@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BoxGeometry, GridHelper, MeshBasicMaterial, Mesh, } from "three";
+import { BoxGeometry, GridHelper, MeshBasicMaterial, Mesh } from "three";
 
-import { setup, moveCubeRandom, TILECOUNT, createCube } from "../game";
+import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { velocity } from "../player";
 
 let { camera, renderer, scene, head } = setup();
@@ -11,28 +11,11 @@ const orbit = new OrbitControls(camera, renderer.domElement);
 const gridHelper = new GridHelper(10, 10);
 scene.add(gridHelper);
 
-const wrap = (block: Mesh<BoxGeometry, MeshBasicMaterial>) => {
-  if (block.position.x < -TILECOUNT) {
-    block.position.x = TILECOUNT;
-  }
-
-  if (block.position.x > TILECOUNT) {
-    block.position.x = -TILECOUNT;
-  }
-
-  if (block.position.z > TILECOUNT) {
-    block.position.z = -TILECOUNT;
-  }
-
-  if (block.position.z < -TILECOUNT) {
-    block.position.z = TILECOUNT;
-  }
-}
-
 const didEat = () => {
-  return head.position.x === food.position.x &&
-         head.position.z === food.position.z
-}
+  return (
+    head.position.x === food.position.x && head.position.z === food.position.z
+  );
+};
 
 const food = createCube();
 moveCubeRandom(food);
@@ -73,7 +56,7 @@ const handleMoves = () => {
 
     moveCubeRandom(food);
   }
-}
+};
 
 setInterval(handleMoves, 1000 / 10);
 
@@ -81,10 +64,9 @@ const render = () => {
   requestAnimationFrame(render);
   orbit.update();
   renderer.render(scene, camera);
-}
+};
 
 render();
 </script>
 
-<template>
-</template>
+<template></template>
