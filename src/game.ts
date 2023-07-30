@@ -1,18 +1,12 @@
 import {
-  Scene,
-  PerspectiveCamera,
-  Vector3,
-  WebGLRenderer,
   BoxGeometry,
   Mesh,
   MeshStandardMaterial,
-  DirectionalLight,
   BufferGeometry,
   Material,
-  PCFSoftShadowMap,
-  DirectionalLightHelper,
 } from "three";
 import { setupKeyEvents } from "./player";
+import { initScene, initCamera, initRenderer, initLightning } from "./setup";
 
 export const TILECOUNT = 10;
 export const UNITSIZE = 0.5;
@@ -35,61 +29,26 @@ export const createCube = (
 };
 
 export const setup = () => {
-  const scene = new Scene();
-  const camera = new PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    2000
-  );
-
-  camera.position.y = 10;
-  camera.position.z = 8;
-  camera.lookAt(new Vector3(0, 0, 0));
-
-  // Renderer stuff
-  const renderer = new WebGLRenderer({
-    antialias: true,
-  });
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = PCFSoftShadowMap;
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-  // Renderer stuff
+  const scene = initScene();
+  const camera = initCamera();
+  const renderer = initRenderer();
+  const lightning = initLightning();
 
   setupKeyEvents();
-  const head = createCube(UNITSIZE, UNITSIZE, UNITSIZE, "#be185d");
-  scene.add(head);
 
-  // platform
+  const head = createCube(UNITSIZE, UNITSIZE, UNITSIZE, "#be185d");
   const platform = createCube(TILECOUNT + 2, 0.5, TILECOUNT + 2, "#d8b4fe");
   platform.position.y = -0.51;
-  scene.add(platform);
 
-  // lightning
-  const light = new DirectionalLight("#ffffff", 2);
-  light.position.x = 5;
-  light.position.y = 10;
-  light.position.z = -5;
-  light.shadow.camera.left = -8;
-  light.shadow.camera.right = 8;
-  light.shadow.camera.top = 8;
-  light.shadow.camera.bottom = -8;
-  light.shadow.mapSize.height = 1024;
-  light.shadow.mapSize.width = 1024;
-  light.castShadow = true;
-  scene.add(light);
-
-  const helper = new DirectionalLightHelper(light, 5);
-  scene.add(helper);
+  scene.add(head, platform, lightning);
 
   return {
     scene,
     camera,
     renderer,
-    head,
-  };
+    lightning,
+    head
+  }
 };
 
 export const moveCubeRandom = <G extends BufferGeometry, M extends Material>(
@@ -100,13 +59,6 @@ export const moveCubeRandom = <G extends BufferGeometry, M extends Material>(
 
   cube.position.x = foodX;
   cube.position.z = foodZ;
-
-  return cube;
-};
-
-export const createFood = () => {
-  const cube = createCube(UNITSIZE, UNITSIZE, UNITSIZE, "red");
-  moveCubeRandom(cube);
 
   return cube;
 };

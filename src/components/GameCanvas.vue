@@ -5,17 +5,9 @@ import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { velocity } from "../player";
 
-let { camera, renderer, scene, head } = setup();
+const { camera, renderer, scene, head } = setup();
 
 const orbit = new OrbitControls(camera, renderer.domElement);
-// const gridHelper = new GridHelper(10, 10);
-// scene.add(gridHelper);
-
-const didEat = () => {
-  return (
-    head.position.x === food.position.x && head.position.z === food.position.z
-  );
-};
 
 const food = createCube();
 moveCubeRandom(food);
@@ -50,7 +42,10 @@ const handleMoves = () => {
     nextTick = false;
   }
 
-  if (didEat()) {
+  if (
+    head.position.x === food.position.x &&
+    head.position.y === food.position.y
+  ) {
     nextBlock = trail[0].clone();
     nextTick = true;
 
@@ -59,7 +54,6 @@ const handleMoves = () => {
 };
 
 setInterval(handleMoves, 1000 / 10);
-
 const render = () => {
   requestAnimationFrame(render);
   orbit.update();
