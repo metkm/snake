@@ -14,9 +14,9 @@ export const initCamera = () => {
     2000
   );
 
-
-  camera.position.y = 10;
-  camera.position.z = 8;
+  camera.position.y = 8;
+  camera.position.z = 7;
+  camera.position.x = -4;
   camera.lookAt(new Vector3(0, 0, 0));
 
   return camera;
