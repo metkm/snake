@@ -7,10 +7,10 @@ import {
   Mesh,
   MeshStandardMaterial,
   DirectionalLight,
-  AmbientLight,
   BufferGeometry,
   Material,
   PCFSoftShadowMap,
+  DirectionalLightHelper,
 } from "three";
 import { setupKeyEvents } from "./player";
 
@@ -40,7 +40,7 @@ export const setup = () => {
     75,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    2000
   );
 
   camera.position.y = 10;
@@ -64,28 +64,25 @@ export const setup = () => {
 
   // platform
   const platform = createCube(TILECOUNT + 2, 0.5, TILECOUNT + 2, "#d8b4fe");
-
-  platform.position.y = -0.5;
+  platform.position.y = -0.51;
   scene.add(platform);
 
   // lightning
   const light = new DirectionalLight("#ffffff", 2);
-  light.position.x = 6;
-  light.position.y = 20;
-  light.position.z = -6;
-  light.castShadow = true;
-  light.shadow.mapSize.width = 1024;
+  light.position.x = 5;
+  light.position.y = 10;
+  light.position.z = -5;
+  light.shadow.camera.left = -8;
+  light.shadow.camera.right = 8;
+  light.shadow.camera.top = 8;
+  light.shadow.camera.bottom = -8;
   light.shadow.mapSize.height = 1024;
-  // light.shadow.camera.left = -5;
-  // light.shadow.camera.right = 5;
-  // light.shadow.camera.top = 5;
-  // light.shadow.camera.bottom = -5;
-  // light.shadow.camera.near = 0;
-  // light.shadow.camera.far = 50;
+  light.shadow.mapSize.width = 1024;
+  light.castShadow = true;
   scene.add(light);
 
-  const ambientLight = new AmbientLight("#ffffff", 0.1);
-  scene.add(ambientLight)
+  const helper = new DirectionalLightHelper(light, 5);
+  scene.add(helper);
 
   return {
     scene,
