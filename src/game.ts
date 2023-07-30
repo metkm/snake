@@ -76,13 +76,7 @@ export const setup = () => {
   light.shadow.mapSize.width = 1024;
   light.shadow.mapSize.height = 1024;
 
-  // light.shadow.map.width = 1024;
-  // light.shadow.map.height = 1024;
   scene.add(light);
-
-  // const light2 = new HemisphereLight("white", 0xffffff, 0.5);
-  // scene.add(light);
-  // scene.add(light2);
 
   return {
     scene,
