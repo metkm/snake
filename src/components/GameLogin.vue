@@ -6,22 +6,6 @@ const href = ref("");
 
 onMounted(async () => {
   href.value = await redirectToAuthFlow();
-
-  // const params = new URLSearchParams(window.location.search);
-  // const code = params.get("code");
-
-  // console.log(route.query, window.location.search)
-
-  // const code = route.query.codel
-
-  // if (!code) {
-  //   href.value = await redirectToAuthFlow();
-  // } else {
-  //   const accessToken = await getAcessToken(code);
-  //   const profile = await fetchProfile(accessToken);
-
-  //   console.log(profile);
-  // }
 })
 </script>
 
