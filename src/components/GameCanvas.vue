@@ -14,14 +14,18 @@ scene.add(gridHelper);
 const wrap = (block: Mesh<BoxGeometry, MeshBasicMaterial>) => {
   if (block.position.x < -TILECOUNT) {
     block.position.x = TILECOUNT;
-  } else if (head.position.x > TILECOUNT) {
+  }
+
+  if (block.position.x > TILECOUNT) {
     block.position.x = -TILECOUNT;
+  }
+
+  if (block.position.z > TILECOUNT) {
+    block.position.z = -TILECOUNT;
   }
 
   if (block.position.z < -TILECOUNT) {
     block.position.z = TILECOUNT;
-  } else if (head.position.z > TILECOUNT) {
-    block.position.z = -TILECOUNT;
   }
 }
 
