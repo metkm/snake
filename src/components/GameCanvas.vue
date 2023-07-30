@@ -44,7 +44,7 @@ const handleMoves = () => {
 
   if (
     head.position.x === food.position.x &&
-    head.position.y === food.position.y
+    head.position.z === food.position.z
   ) {
     nextBlock = trail[0].clone();
     nextTick = true;
