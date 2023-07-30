@@ -29,8 +29,8 @@ export const setup = () => {
 }
 
 export const moveFood = (cube: Mesh<BoxGeometry, MeshBasicMaterial>) => {
-  let foodX = Math.floor(Math.random() * TILECOUNT);
-  let foodZ = Math.floor(Math.random() * TILECOUNT);
+  let foodX = Math.round(Math.random() * TILECOUNT);
+  let foodZ = Math.round(Math.random() * TILECOUNT);
 
   cube.position.x = foodX;
   cube.position.z = foodZ;

@@ -34,8 +34,8 @@ const handleMoves = () => {
   wrap(head);
 
   if (
-    Math.floor(head.position.x) === food.position.x &&
-    Math.floor(head.position.z) === food.position.z
+    head.position.x === food.position.x &&
+    head.position.z === food.position.z
   ) {
     moveFood(food);
   }
