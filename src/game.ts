@@ -7,11 +7,12 @@ import {
   Mesh,
   MeshStandardMaterial,
   DirectionalLight,
+  AmbientLight,
   BufferGeometry,
   Material,
-PCFSoftShadowMap,
+  PCFSoftShadowMap,
 } from "three";
-import { createTailHead, setupKeyEvents } from "./player";
+import { setupKeyEvents } from "./player";
 
 export const TILECOUNT = 10;
 export const UNITSIZE = 0.5;
@@ -58,11 +59,11 @@ export const setup = () => {
   // Renderer stuff
 
   setupKeyEvents();
-  const head = createTailHead();
+  const head = createCube(UNITSIZE, UNITSIZE, UNITSIZE, "#be185d");
   scene.add(head);
 
   // platform
-  const platform = createCube(TILECOUNT, 0.5, TILECOUNT, "#d8b4fe");
+  const platform = createCube(TILECOUNT + 2, 0.5, TILECOUNT + 2, "#d8b4fe");
 
   platform.position.y = -0.5;
   scene.add(platform);
@@ -75,8 +76,16 @@ export const setup = () => {
   light.castShadow = true;
   light.shadow.mapSize.width = 1024;
   light.shadow.mapSize.height = 1024;
-
+  // light.shadow.camera.left = -5;
+  // light.shadow.camera.right = 5;
+  // light.shadow.camera.top = 5;
+  // light.shadow.camera.bottom = -5;
+  // light.shadow.camera.near = 0;
+  // light.shadow.camera.far = 50;
   scene.add(light);
+
+  const ambientLight = new AmbientLight("#ffffff", 0.1);
+  scene.add(ambientLight)
 
   return {
     scene,
