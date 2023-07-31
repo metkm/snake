@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
+import { Easing, Tween, update } from "@tweenjs/tween.js";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
 import axios from "axios";
@@ -12,7 +13,7 @@ import { Track } from "../models/Playlists";
 const { camera, renderer, scene, head } = setup();
 
 const playlistStore = usePlaylistStore();
-const { selectedPlaylists, currentTrack, currentColor } = storeToRefs(playlistStore);
+const { selectedPlaylists, currentTrack, currentColors } = storeToRefs(playlistStore);
 
 const food = createCube();
 moveCubeRandom(food);
@@ -65,26 +66,34 @@ const handleMoves = async () => {
 
       let items = randomList.items;
       if (!items || items.length === 0) return;
-      
+
       let randomItem: Track = items[Math.floor(Math.random() * items.length)];
       await axios.put("/me/player/play", {
-        uris: [randomItem.uri]
-      })
+        uris: [randomItem.uri],
+      });
 
       currentTrack.value = randomItem;
     }
   }
 };
 
-watch(currentColor, () => {
-  scene.background = new Color(
-    `#${currentColor.value![0].toString(16)}${currentColor.value![1].toString(16)}${currentColor.value![2].toString(16)}`
-  );
-})
+watch(currentColors, () => {
+  if (!currentColors.value) return;
+
+  new Tween(scene.background as Color)
+    .to({
+      r: currentColors.value[0][0] / 100,
+      g: currentColors.value[0][1] / 100,
+      b: currentColors.value[0][2] / 100
+    })
+    .easing(Easing.Exponential.Out)
+    .start();
+});
 
 setInterval(handleMoves, 1000 / 10);
 const render = () => {
   requestAnimationFrame(render);
+  update();
   renderer.render(scene, camera);
 };
 

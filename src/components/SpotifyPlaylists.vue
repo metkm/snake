@@ -9,17 +9,16 @@ import ColorThief from "colorthief";
 const colorThief = new ColorThief();
 
 const playlistStore = usePlaylistStore();
-const { currentTrack, selectedPlaylists, currentColor } = storeToRefs(playlistStore);
+const { currentTrack, selectedPlaylists, currentColors } = storeToRefs(playlistStore);
 
 const response = await axios("/me/playlists");
 const playlists = ref<PlaylistsResponse>(response.data);
 const currentTrackImageElement = ref<HTMLImageElement | null>(null);
 
-
 onMounted(() => {
   currentTrackImageElement.value?.addEventListener("load", async () => {
-    let color = colorThief.getColor(currentTrackImageElement.value!);
-    currentColor.value = color;
+    let colors = colorThief.getPalette(currentTrackImageElement.value!);
+    currentColors.value = colors;
   })
 })
 

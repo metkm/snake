@@ -6,7 +6,7 @@ import { RGBColor } from "colorthief";
 export const usePlaylistStore = defineStore("playlists", () => {
   const selectedPlaylists = ref<SimplifiedPlaylistWithItems[]>([]);
   const currentTrack = ref<Track>();
-  const currentColor = ref<RGBColor>();
+  const currentColors = ref<RGBColor[]>();
 
   const isSelected = (list: SimplifiedPlaylistWithItems) => {
     return selectedPlaylists.value.includes(list);
@@ -16,6 +16,6 @@ export const usePlaylistStore = defineStore("playlists", () => {
     selectedPlaylists,
     isSelected,
     currentTrack,
-    currentColor
+    currentColors
   }
 });
