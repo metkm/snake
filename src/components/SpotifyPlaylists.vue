@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useProfileStore } from "../store";
-import { PlaylistsResponse, SimplifiedPlaylist } from "../models/Playlists";
+import { PlaylistsResponse, SimplifiedPlaylistWithItems } from "../models/Playlists";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 
 const profileStore = useProfileStore();
 const { accessToken } = storeToRefs(profileStore);
@@ -12,11 +12,19 @@ const response = await fetch("https://api.spotify.com/v1/me/playlists", {
 });
 
 const playlists = ref<PlaylistsResponse>(await response.json());
-const selectedPlaylists = ref<SimplifiedPlaylist[]>([]);
+const selectedPlaylists = ref<SimplifiedPlaylistWithItems[]>([]);
 
-const isSelected = (list: SimplifiedPlaylist) => {
+const isSelected = (list: SimplifiedPlaylistWithItems) => {
   return selectedPlaylists.value.includes(list);
 };
+
+watchEffect(async () => {
+  for (let playlist of selectedPlaylists.value) {
+    if (playlist.items) continue;
+
+
+  }
+})
 </script>
 
 <template>

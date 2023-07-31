@@ -1,5 +1,3 @@
-import { MagicString } from "vue/compiler-sfc"
-
 export interface Image {
   url: string,
   height: number | null,
@@ -17,7 +15,7 @@ export interface PlaylistsResponse {
   offset: number,
   previous: string | null,
   total: number,
-  items: SimplifiedPlaylist[]
+  items: SimplifiedPlaylistWithItems[]
 }
 
 export interface SimplifiedPlaylist {
@@ -48,6 +46,10 @@ export interface SimplifiedPlaylist {
   },
   type: "playlist",
   uri: string
+}
+
+export interface SimplifiedPlaylistWithItems extends SimplifiedPlaylist {
+  items: Track[] | null
 }
 
 export interface AddedBy {
