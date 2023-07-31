@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
+import { storeToRefs } from "pinia";
+import axios from "axios";
 
-import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { velocity } from "../player";
+import { usePlaylistStore } from "../store/playlist";
+import { setup, moveCubeRandom, createCube, wrap } from "../game";
 
 const { camera, renderer, scene, head } = setup();
+
+const playlistStore = usePlaylistStore();
+const { selectedPlaylists } = storeToRefs(playlistStore);
 
 const food = createCube();
 moveCubeRandom(food);
@@ -16,7 +22,7 @@ const history = [velocity];
 let nextTick = false;
 let nextBlock: Mesh<BoxGeometry, MeshStandardMaterial> | undefined = undefined;
 
-const handleMoves = () => {
+const handleMoves = async () => {
   history.push(velocity.clone());
 
   while (history.length > trail.length) {
@@ -47,6 +53,22 @@ const handleMoves = () => {
     nextTick = true;
 
     moveCubeRandom(food);
+
+    // select random playlist and song to play
+    if (selectedPlaylists.value.length > 0) {
+      let randomList =
+        selectedPlaylists.value[
+          Math.floor(Math.random() * selectedPlaylists.value.length)
+        ];
+
+      let items = randomList.items;
+      if (!items || items.length === 0) return;
+      
+      let randomItem = items[Math.floor(Math.random() * items.length)];
+      await axios.put("/me/player/play", {
+        uris: [randomItem.uri]
+      })
+    }
   }
 };
 
