@@ -55,7 +55,9 @@ export const setup = () => {
     camera,
     renderer,
     lightning,
-    head
+    objects: {
+      head, platform
+    }
   }
 };
 

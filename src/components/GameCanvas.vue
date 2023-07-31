@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
-import { Easing, Tween, update } from "@tweenjs/tween.js";
+import { update } from "@tweenjs/tween.js";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
 import axios from "axios";
@@ -9,8 +9,9 @@ import { velocity } from "../player";
 import { usePlaylistStore } from "../store/playlist";
 import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { Track } from "../models/Playlists";
+import { animate } from "../animate";
 
-const { camera, renderer, scene, head } = setup();
+const { camera, renderer, scene, objects: { head, platform } } = setup();
 
 const playlistStore = usePlaylistStore();
 const { selectedPlaylists, currentTrack, currentColors } = storeToRefs(playlistStore);
@@ -48,6 +49,7 @@ const handleMoves = async () => {
     nextTick = false;
   }
 
+  // check if food is eaten
   if (
     head.position.x === food.position.x &&
     head.position.z === food.position.z
@@ -77,17 +79,11 @@ const handleMoves = async () => {
   }
 };
 
+// change colors of objects when the song changes
 watch(currentColors, () => {
   if (!currentColors.value) return;
-
-  new Tween(scene.background as Color)
-    .to({
-      r: currentColors.value[0][0] / 100,
-      g: currentColors.value[0][1] / 100,
-      b: currentColors.value[0][2] / 100
-    })
-    .easing(Easing.Exponential.Out)
-    .start();
+  animate(scene.background as Color, currentColors.value[0]);
+  animate(platform.material.color, currentColors.value[1]);
 });
 
 setInterval(handleMoves, 1000 / 10);
