@@ -1,3 +1,5 @@
+import { PlaylistTracksResponse } from "./models/Playlists";
+
 export const redirectToAuthFlow = async () => {
   const verifier = generateCodeVerifier(128);
   const challenge = await generateCodeChallange(verifier);
@@ -70,5 +72,6 @@ export const fetchPlaylistItems = async (playlistId: string, token: string) => {
     headers: { Authorization: `Bearer ${token}` }
   });
 
-  
+  let body: PlaylistTracksResponse = await response.json();
+  return body;
 }

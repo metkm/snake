@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProfileStore } from "../store";
-import { storeToRefs } from "pinia";
 import { PlaylistsResponse, SimplifiedPlaylist } from "../models/Playlists";
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 const profileStore = useProfileStore();
