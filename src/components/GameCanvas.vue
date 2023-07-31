@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
+import { BoxGeometry, Color, Mesh, MeshBasicMaterial, MeshStandardMaterial, TextureLoader } from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { update } from "@tweenjs/tween.js";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
@@ -7,11 +8,14 @@ import axios from "axios";
 
 import { velocity } from "../player";
 import { usePlaylistStore } from "../store/playlist";
-import { setup, moveCubeRandom, createCube, wrap } from "../game";
+import { setup, moveCubeRandom, createCube, wrap, TILECOUNT } from "../game";
 import { Track } from "../models/Playlists";
 import { animate } from "../colors";
+import { createText } from "../game";
 
-const { camera, renderer, scene, objects: { head, platform } } = setup();
+const { camera, renderer, scene, objects: { head, platform } } = await setup();
+
+const orbit = new OrbitControls(camera, renderer.domElement);
 
 const playlistStore = usePlaylistStore();
 const { selectedPlaylists, currentTrack, currentColors } = storeToRefs(playlistStore);
@@ -25,6 +29,10 @@ const history = [velocity];
 
 let nextTick = false;
 let nextBlock: Mesh<BoxGeometry, MeshStandardMaterial> | undefined = undefined;
+
+let songText: ReturnType<typeof createText>;
+let songCover: Mesh<BoxGeometry, MeshBasicMaterial>;
+const loader = new TextureLoader();
 
 const handleMoves = async () => {
   history.push(velocity.clone());
@@ -75,6 +83,24 @@ const handleMoves = async () => {
       });
 
       currentTrack.value = randomItem;
+
+      // song title
+      scene.remove(songText)
+      songText = createText(randomItem.name);
+      scene.add(songText);
+
+      // song cover
+      scene.remove()
+      const geometry = new BoxGeometry(3, 3, 0);
+      const material = new MeshBasicMaterial();
+      songCover = new Mesh(geometry, material);
+
+      const texture = await loader.loadAsync(randomItem.album.images[0].url);
+      songCover.material.map = texture;
+      songCover.position.y = 2;
+      songCover.position.z = (-TILECOUNT / 2) - 2;
+      songCover.position.x = (-TILECOUNT / 2) + 1;
+      scene.add(songCover);
     }
   }
 };
@@ -94,6 +120,7 @@ setInterval(handleMoves, 1000 / 10);
 const render = () => {
   requestAnimationFrame(render);
   update();
+  orbit.update();
   renderer.render(scene, camera);
 };
 

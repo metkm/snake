@@ -11,7 +11,13 @@ const { profile } = storeToRefs(profileStore);
 </script>
 
 <template>
-  <GameCanvas />
+  <Suspense>
+    <GameCanvas />
+
+    <template #fallback>
+      <p>loading game...</p>
+    </template>
+  </Suspense>
 
   <div class="fixed bottom-5 right-5 grid gap-2">
     <Suspense>

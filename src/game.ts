@@ -4,7 +4,10 @@ import {
   MeshStandardMaterial,
   BufferGeometry,
   Material,
+MeshBasicMaterial,
 } from "three";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { setupKeyEvents } from "./player";
 import { initScene, initCamera, initRenderer, initLightning } from "./setup";
 
@@ -30,7 +33,23 @@ export const createCube = (
   return cube;
 };
 
-export const setup = () => {
+let font: Font;
+export const createText = (text: string) => {
+  const songGeometry = new TextGeometry(text, {
+    font,
+    size: 0.5,
+    height: 0.1,
+  });
+  const material = new MeshBasicMaterial({ color: 'white' });
+  const songMesh = new Mesh(songGeometry, material);
+  songMesh.position.z = (-TILECOUNT / 2) - 2;
+  songMesh.position.x = -2;
+  songMesh.position.y = 0.5;
+
+  return songMesh;
+}
+
+export const setup = async () => {
   const scene = initScene();
   const camera = initCamera();
   const renderer = initRenderer();
@@ -47,6 +66,9 @@ export const setup = () => {
   const head = createCube(UNITSIZE, UNITSIZE, UNITSIZE, "#667761");
   const platform = createCube(TILECOUNT + 2, 0.5, TILECOUNT + 2, "#9B8884");
   platform.position.y = -0.51;
+  
+  const loader = new FontLoader();
+  font = await loader.loadAsync("/src/assets/Inter_Regular.json");
 
   scene.add(head, platform, lightning);
 
@@ -56,7 +78,9 @@ export const setup = () => {
     renderer,
     lightning,
     objects: {
-      head, platform
+      head,
+      platform,
+      // songMesh
     }
   }
 };
