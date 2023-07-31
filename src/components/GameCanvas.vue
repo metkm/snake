@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { BoxGeometry, Color, Mesh, MeshBasicMaterial, MeshStandardMaterial, TextureLoader } from "three";
+import { BoxGeometry, Color, Mesh, MeshBasicMaterial, MeshStandardMaterial, TextureLoader, sRGBEncoding } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { update } from "@tweenjs/tween.js";
 import { storeToRefs } from "pinia";
 import { watch } from "vue";
 import axios from "axios";
+import ColorThief from "colorthief";
+
 
 import { velocity } from "../player";
 import { usePlaylistStore } from "../store/playlist";
@@ -16,9 +18,10 @@ import { createText } from "../game";
 const { camera, renderer, scene, objects: { head, platform } } = await setup();
 
 const orbit = new OrbitControls(camera, renderer.domElement);
+const colorThief = new ColorThief();
 
 const playlistStore = usePlaylistStore();
-const { selectedPlaylists, currentTrack, currentColors } = storeToRefs(playlistStore);
+const { selectedPlaylists, currentTrack } = storeToRefs(playlistStore);
 
 const food = createCube();
 moveCubeRandom(food);
@@ -96,6 +99,7 @@ const handleMoves = async () => {
       songCover = new Mesh(geometry, material);
 
       const texture = await loader.loadAsync(randomItem.album.images[0].url);
+      texture.encoding = sRGBEncoding;
       songCover.material.map = texture;
       songCover.position.y = 2;
       songCover.position.z = (-TILECOUNT / 2) - 2;
@@ -105,16 +109,26 @@ const handleMoves = async () => {
   }
 };
 
-// change colors of objects when the song changes
-watch(currentColors, () => {
-  if (!currentColors.value) return;
-  animate(scene.background as Color, currentColors.value[0]);
-  animate(platform.material.color, currentColors.value[1]);
+const element = document.createElement("img");
+element.crossOrigin = "anonymous";
+element.addEventListener("load", () => {
+  let colors = colorThief.getPalette(element);
+
+  if (!colors) return;
+  animate(scene.background as Color, colors[0]);
+  animate(platform.material.color, colors[1]);
 
   for (let block of trail) {
-    animate(block.material.color, currentColors.value[2]);
+    animate(block.material.color, colors[2]);
   }
-});
+})
+
+// change colors of objects when the song changes
+watch(currentTrack, async () => {
+  let url = currentTrack.value?.album.images[0].url;
+  if (!url) return;
+  element.src = url;
+})
 
 setInterval(handleMoves, 1000 / 10);
 const render = () => {

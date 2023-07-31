@@ -1,27 +1,15 @@
 <script setup lang="ts">
-import { ref, watchEffect, onMounted, computed, StyleValue } from "vue";
+import { ref, watchEffect } from "vue";
 import { PlaylistTracksResponse, PlaylistsResponse } from "../models/Playlists";
 import { usePlaylistStore } from "../store/playlist";
 import { storeToRefs } from "pinia";
-
 import axios from "axios";
-import ColorThief from "colorthief";
-
-const colorThief = new ColorThief();
 
 const playlistStore = usePlaylistStore();
-const { currentTrack, selectedPlaylists, currentColors } = storeToRefs(playlistStore);
+const { selectedPlaylists } = storeToRefs(playlistStore);
 
 const response = await axios("/me/playlists");
 const playlists = ref<PlaylistsResponse>(response.data);
-const currentTrackImageElement = ref<HTMLImageElement | null>(null);
-
-onMounted(() => {
-  currentTrackImageElement.value?.addEventListener("load", async () => {
-    let colors = colorThief.getPalette(currentTrackImageElement.value!);
-    currentColors.value = colors;
-  })
-})
 
 watchEffect(async () => {
   for (let playlist of selectedPlaylists.value) {
@@ -34,31 +22,12 @@ watchEffect(async () => {
     playlist.items = response.data.items.map((item) => item.track);
   }
 });
-
-const backgroundColor = computed<StyleValue | undefined>(() => {
-  if (!currentColors.value?.[0]) return;
-  let rgb = currentColors.value[0];
-  return {
-    backgroundColor: `rgb(${rgb[0] / 3}, ${rgb[1] / 3}, ${rgb[2] / 3})`
-  }
-})
 </script>
 
 <template>
   <div
     class="grid text-white rounded-lg overflow-hidden shadow transition-colors"
-    :style="backgroundColor"
   >
-    <div>
-      <img
-        ref="currentTrackImageElement"
-        :src="currentTrack?.album.images[0].url"
-        width="40"
-        height="40"
-        crossorigin="anonymous"
-      />
-    </div>
-
     <div
       v-for="list in playlists.items"
       :key="list.id"
