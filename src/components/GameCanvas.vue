@@ -7,7 +7,6 @@ import { watch } from "vue";
 import axios from "axios";
 import ColorThief from "colorthief";
 
-
 import { velocity } from "../player";
 import { usePlaylistStore } from "../store/playlist";
 import { setup, moveCubeRandom, createCube, wrap, TILECOUNT } from "../game";
