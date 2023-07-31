@@ -1,24 +1,25 @@
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
-import { PlaylistsResponse, SimplifiedPlaylistWithItems } from "../models/Playlists";
+import { PlaylistTracksResponse, PlaylistsResponse } from "../models/Playlists";
+import { usePlaylistStore } from "../store/playlist";
 import axios from "axios";
 
-const response = await axios("/playlists");
+const playlistStore = usePlaylistStore();
 
+const response = await axios("/me/playlists");
 const playlists = ref<PlaylistsResponse>(response.data);
-const selectedPlaylists = ref<SimplifiedPlaylistWithItems[]>([]);
-
-const isSelected = (list: SimplifiedPlaylistWithItems) => {
-  return selectedPlaylists.value.includes(list);
-};
 
 watchEffect(async () => {
-  for (let playlist of selectedPlaylists.value) {
+  for (let playlist of playlistStore.selectedPlaylists) {
     if (playlist.items) continue;
 
+    const response = await axios<PlaylistTracksResponse>(
+      `/playlists/${playlist.id}/tracks`
+    );
 
+    playlist.items = response.data.items.map((item) => item.track);
   }
-})
+});
 </script>
 
 <template>
@@ -29,10 +30,12 @@ watchEffect(async () => {
       v-for="list in playlists.items"
       :key="list.id"
       class="flex items-center p-2 gap-2 hover:bg-slate-800 relative transition-colors"
-      :class="{ 'bg-emerald-800 hover:bg-emerald-700': isSelected(list) }"
+      :class="{
+        'bg-emerald-800 hover:bg-emerald-700': playlistStore.isSelected(list),
+      }"
     >
       <input
-        v-model="selectedPlaylists"
+        v-model="playlistStore.selectedPlaylists"
         :value="list"
         type="checkbox"
         class="absolute inset-0 appearance-none"

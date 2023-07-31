@@ -1,4 +1,3 @@
-import { PlaylistTracksResponse } from "./models/Playlists";
 import axios from "axios";
 
 export const redirectToAuthFlow = async () => {
@@ -62,8 +61,4 @@ export const getAcessToken = async (code: string) => {
     accessToken: response.data.access_token,
     refreshToken: response.data.refresh_token
   }
-}
-
-export const fetchPlaylistItems = async (playlistId: string) => {
-  return await axios<PlaylistTracksResponse>(`/playlists/${playlistId}/tracks`)
 }
