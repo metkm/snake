@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { SimplifiedPlaylistWithItems } from "../models/Playlists";
+import { SimplifiedPlaylistWithItems, Track } from "../models/Playlists";
+import { RGBColor } from "colorthief";
 
 export const usePlaylistStore = defineStore("playlists", () => {
   const selectedPlaylists = ref<SimplifiedPlaylistWithItems[]>([]);
+  const currentTrack = ref<Track>();
+  const currentColor = ref<RGBColor>();
 
   const isSelected = (list: SimplifiedPlaylistWithItems) => {
     return selectedPlaylists.value.includes(list);
@@ -11,6 +14,8 @@ export const usePlaylistStore = defineStore("playlists", () => {
 
   return {
     selectedPlaylists,
-    isSelected
+    isSelected,
+    currentTrack,
+    currentColor
   }
 });

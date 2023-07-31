@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
+import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
 import { storeToRefs } from "pinia";
+import { watch } from "vue";
 import axios from "axios";
 
 import { velocity } from "../player";
 import { usePlaylistStore } from "../store/playlist";
 import { setup, moveCubeRandom, createCube, wrap } from "../game";
+import { Track } from "../models/Playlists";
 
 const { camera, renderer, scene, head } = setup();
 
 const playlistStore = usePlaylistStore();
-const { selectedPlaylists } = storeToRefs(playlistStore);
+const { selectedPlaylists, currentTrack, currentColor } = storeToRefs(playlistStore);
 
 const food = createCube();
 moveCubeRandom(food);
@@ -64,13 +66,21 @@ const handleMoves = async () => {
       let items = randomList.items;
       if (!items || items.length === 0) return;
       
-      let randomItem = items[Math.floor(Math.random() * items.length)];
+      let randomItem: Track = items[Math.floor(Math.random() * items.length)];
       await axios.put("/me/player/play", {
         uris: [randomItem.uri]
       })
+
+      currentTrack.value = randomItem;
     }
   }
 };
+
+watch(currentColor, () => {
+  scene.background = new Color(
+    `#${currentColor.value![0].toString(16)}${currentColor.value![1].toString(16)}${currentColor.value![2].toString(16)}`
+  );
+})
 
 setInterval(handleMoves, 1000 / 10);
 const render = () => {
