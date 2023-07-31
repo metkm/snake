@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { BoxGeometry, Mesh, MeshStandardMaterial } from "three";
 
 import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { velocity } from "../player";
 
 const { camera, renderer, scene, head } = setup();
-
-const orbit = new OrbitControls(camera, renderer.domElement);
 
 const food = createCube();
 moveCubeRandom(food);
@@ -56,7 +53,6 @@ const handleMoves = () => {
 setInterval(handleMoves, 1000 / 10);
 const render = () => {
   requestAnimationFrame(render);
-  orbit.update();
   renderer.render(scene, camera);
 };
 

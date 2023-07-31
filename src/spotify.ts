@@ -15,7 +15,6 @@ export const redirectToAuthFlow = async () => {
   return `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
-
 const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const generateCodeVerifier = (length: number) => {
   let text = '';
@@ -64,4 +63,12 @@ export const fetchProfile = async (token: string) => {
   });
 
   return await response.json();
+}
+
+export const fetchPlaylistItems = async (playlistId: string, token: string) => {
+  const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  
 }

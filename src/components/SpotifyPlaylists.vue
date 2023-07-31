@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useProfileStore } from "../store";
 import { storeToRefs } from "pinia";
-import { Playlists, SimplifiedPlaylist } from "../models/Playlists";
+import { PlaylistsResponse, SimplifiedPlaylist } from "../models/Playlists";
 import { ref } from "vue";
 
 const profileStore = useProfileStore();
@@ -11,7 +11,7 @@ const response = await fetch("https://api.spotify.com/v1/me/playlists", {
   headers: { Authorization: `Bearer ${accessToken.value}` },
 });
 
-const playlists = ref<Playlists>(await response.json());
+const playlists = ref<PlaylistsResponse>(await response.json());
 const selectedPlaylists = ref<SimplifiedPlaylist[]>([]);
 
 const isSelected = (list: SimplifiedPlaylist) => {
