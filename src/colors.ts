@@ -12,3 +12,8 @@ export const animate = (from: Color, to: RGBColor) => {
     .easing(Easing.Exponential.Out)
     .start();
 }
+
+export const toHex = (rgb: RGBColor) => {
+  const [r, g, b] = rgb;
+  return `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
+}

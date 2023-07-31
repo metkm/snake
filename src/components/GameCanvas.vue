@@ -9,7 +9,7 @@ import { velocity } from "../player";
 import { usePlaylistStore } from "../store/playlist";
 import { setup, moveCubeRandom, createCube, wrap } from "../game";
 import { Track } from "../models/Playlists";
-import { animate } from "../animate";
+import { animate } from "../colors";
 
 const { camera, renderer, scene, objects: { head, platform } } = setup();
 
