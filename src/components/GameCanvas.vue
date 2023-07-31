@@ -84,6 +84,10 @@ watch(currentColors, () => {
   if (!currentColors.value) return;
   animate(scene.background as Color, currentColors.value[0]);
   animate(platform.material.color, currentColors.value[1]);
+
+  for (let block of trail) {
+    animate(block.material.color, currentColors.value[2]);
+  }
 });
 
 setInterval(handleMoves, 1000 / 10);
