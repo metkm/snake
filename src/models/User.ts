@@ -16,7 +16,7 @@ export interface User {
   href: string,
   id: string,
   images: Image[],
-  product: string,
-  type: string,
+  product: "premium" | "free",
+  type: "user",
   uri: string
 }

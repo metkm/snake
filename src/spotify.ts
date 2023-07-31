@@ -1,4 +1,5 @@
 import { PlaylistTracksResponse } from "./models/Playlists";
+import axios from "axios";
 
 export const redirectToAuthFlow = async () => {
   const verifier = generateCodeVerifier(128);
@@ -39,39 +40,30 @@ export const getAcessToken = async (code: string) => {
   const verifier = localStorage.getItem("verifier");
   if (!verifier) return;
 
-  const params = new URLSearchParams();
-  params.append("client_id", import.meta.env.VITE_CLIENT_ID);
-  params.append("grant_type", "authorization_code");
-  params.append("code", code);
-  params.append("redirect_uri", import.meta.env.VITE_REDIRECT_URI);
-  params.append("code_verifier", verifier!);
-
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: params
+  const response = await axios.post<{
+    access_token: string,
+    refresh_token: string
+  }>("https://accounts.spotify.com/api/token", {
+    "client_id": import.meta.env.VITE_CLIENT_ID,
+    "grant_type": "authorization_code",
+    "code": code,
+    "redirect_uri": import.meta.env.VITE_REDIRECT_URI,
+    "code_verifier": verifier
+  }, {
+    headers: {
+      "Content-Type": 'application/x-www-form-urlencoded'
+    }
   });
 
-  const { access_token, refresh_token }: { access_token: string, refresh_token: string } = await response.json();
+  axios.defaults.baseURL = "https://api.spotify.com/v1"
+  axios.defaults.headers.common.Authorization = `Bearer ${response.data.access_token}`;
+
   return {
-    accessToken: access_token,
-    refreshToken: refresh_token
+    accessToken: response.data.access_token,
+    refreshToken: response.data.refresh_token
   }
 }
 
-export const fetchProfile = async (token: string) => {
-  const response = await fetch("https://api.spotify.com/v1/me", {
-    method: "GET", headers: { Authorization: `Bearer ${token}` }
-  });
-
-  return await response.json();
-}
-
-export const fetchPlaylistItems = async (playlistId: string, token: string) => {
-  const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  let body: PlaylistTracksResponse = await response.json();
-  return body;
+export const fetchPlaylistItems = async (playlistId: string) => {
+  return await axios<PlaylistTracksResponse>(`/playlists/${playlistId}/tracks`)
 }
