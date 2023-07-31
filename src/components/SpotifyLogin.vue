@@ -15,7 +15,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="fixed bottom-5 right-5 p-2 rounded-lg bg-slate-500 text-white">
+  <div class="p-2 rounded-lg bg-slate-500 text-white">
     <a v-if="!profile" :href="href" class="font-semibold rounded-lg px-4">Login with Spotify</a>
     <div v-else class="flex gap-2 items-center pr-2">
       <img :src="profile.images[0].url" width="50" height="50" class="rounded" />
