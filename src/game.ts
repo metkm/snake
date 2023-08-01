@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { BoxGeometry, Color, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { update } from "@tweenjs/tween.js";
 
 import { wrap, createText, createSongCover, createCube, moveCubeRandom } from "./objects";
@@ -8,6 +8,8 @@ import { getRandomItem } from "./utils";
 import { setup } from "./setup";
 
 import axios from "axios";
+import ColorThief from "colorthief";
+import { animate } from "./colors";
 
 const {
   renderer,
@@ -15,16 +17,13 @@ const {
   camera,
   objects: {
     head,
+    platform
   }
 } = setup();
 
 const food = createCube();
 moveCubeRandom(food);
 scene.add(food);
-
-// const { food, randomize } = createFood();
-// randomize();
-// scene.add(food);
 
 export const start = () => {
   gameLoop(renderer, scene, camera);
@@ -71,14 +70,14 @@ export const gameMoveLoop = () => {
 
   if (didEat(head, food)) {
     moveCubeRandom(food);
-    changeColors();
+    playNextTrack();
 
     nextTick = true;
     nextBlock = trail[0].clone();
   }
 }
 
-export const changeColors = async () => {
+export const playNextTrack = async () => {
   const playlistStore = usePlaylistStore();
 
   if (playlistStore.selectedPlaylists.length === 0) return;
@@ -97,7 +96,24 @@ export const changeColors = async () => {
 let songText: Awaited<ReturnType<typeof createText>>;
 let songCover: Mesh<BoxGeometry, MeshBasicMaterial>;
 
+const colorThief = new ColorThief();
+const element = document.createElement("img");
+element.crossOrigin = "anonymous";
+element.addEventListener("load", () => {
+  let colors = colorThief.getPalette(element);
+  if (!colors) return;
+  
+  animate(scene.background as Color, colors[0]);
+  animate(platform.material.color, colors[1]);
+
+  for (let block of trail) {
+    animate(block.material.color, colors[2]);
+  }
+})
+
 export const updateSongObjects = async (name: string, uri: string) => {
+  element.src = uri;
+
   scene.remove(songText);
   songText = await createText(name);
   scene.add(songText);
