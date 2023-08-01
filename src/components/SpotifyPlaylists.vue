@@ -30,21 +30,19 @@ const onChange = async (id: string, name: string) => {
 </script>
 
 <template>
-  <ul class="grid bg-slate-900 text-white rounded-lg overflow-hidden">
+  <ul class="bg-neutral-900/40 text-white rounded-lg overflow-hidden grid gap-2 py-2">
     <li
       v-for="list in playlists"
       :key="list.id"
-      class="flex items-center justify-between p-2 hover:bg-slate-800 gap-4"
+      class="flex gap-2 items-center max-w-xs px-2"
     >
-      <div class="flex gap-2 items-center">
-        <img
-          :src="list.images[0].url"
-          width="40"
-          height="40"
-          class="rounded object-cover aspect-square"
-        />
-        <label :for="list.id" class="text-sm">{{ list.name }}</label>
-      </div>
+      <img
+        :src="list.images[0].url"
+        width="40"
+        height="40"
+        class="rounded object-cover aspect-square"
+      />
+      <label :for="list.id" class="text-sm truncate w-full">{{ list.name }}</label>
 
       <input
         v-model="selectedPlaylists"
@@ -52,7 +50,7 @@ const onChange = async (id: string, name: string) => {
         :value="list.id"
         :id="list.id"
         type="checkbox"
-        class="appearance-none w-4 h-4 bg-slate-700 rounded checked:bg-slate-500 checked:bg-[url('/tick.svg')]"
+        class="appearance-none w-4 h-4 aspect-square bg-slate-900/20 rounded checked:bg-slate-900 checked:bg-[url('/tick.svg')]"
       />
     </li>
   </ul>
