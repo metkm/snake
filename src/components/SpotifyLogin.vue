@@ -20,7 +20,7 @@ onMounted(async () => {
     <div v-else class="flex gap-2 items-center pr-2">
       <img :src="profile.images[0].url" width="50" height="50" class="rounded" />
       <div>
-        <p class="text-xs text-slate-400">Logged in as</p>
+        <p class="text-xs text-black font-semibold">Logged in as</p>
         <p>{{ profile.display_name }}</p>
       </div>
     </div>
