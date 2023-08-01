@@ -1,5 +1,5 @@
-import { Vector3 } from "three";
-import { UNITSIZE } from "./game";
+import { BoxGeometry, MeshStandardMaterial, Vector3, Mesh } from "three";
+import { UNITSIZE } from "./objects";
 
 export let velocity = new Vector3(0, 0, 0);
 
@@ -22,4 +22,11 @@ export const keyEvents = ({ code }: KeyboardEvent) => {
       velocity.set(UNITSIZE, 0, 0);
       break;
   }
+}
+
+type Block = Mesh<BoxGeometry, MeshStandardMaterial>;
+
+export const didEat = (head: Block, food: Block) => {
+  return head.position.x === food.position.x &&
+         head.position.z === food.position.z
 }

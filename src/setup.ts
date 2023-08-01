@@ -1,4 +1,6 @@
 import { Scene, WebGLRenderer, PerspectiveCamera, DirectionalLight, PCFSoftShadowMap, Vector3, Color } from "three";
+import { createCube, TILECOUNT } from "./objects";
+import { setupKeyEvents } from "./player";
 
 export const initScene = () => {
   const scene = new Scene();
@@ -53,3 +55,35 @@ export const initLightning = () => {
   
   return light;
 }
+
+export const setup = () => {
+  const scene = initScene();
+  const camera = initCamera();
+  const renderer = initRenderer();
+  const lightning = initLightning();
+
+  window.addEventListener("resize", () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  setupKeyEvents();
+
+  const head = createCube(undefined, undefined, undefined, "#667761");
+  const platform = createCube(TILECOUNT + 2, 0.5, TILECOUNT + 2, "#9B8884");
+  platform.position.y = -0.51;
+
+  scene.add(head, platform, lightning);
+
+  return {
+    scene,
+    camera,
+    renderer,
+    lightning,
+    objects: {
+      head,
+      platform,
+    },
+  };
+};

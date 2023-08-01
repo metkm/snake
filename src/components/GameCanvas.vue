@@ -1,143 +1,148 @@
 <script setup lang="ts">
-import { BoxGeometry, Color, Mesh, MeshBasicMaterial, MeshStandardMaterial, TextureLoader, sRGBEncoding } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { update } from "@tweenjs/tween.js";
-import { storeToRefs } from "pinia";
-import { watch } from "vue";
-import axios from "axios";
-import ColorThief from "colorthief";
+import { start } from "../game";
 
-import { velocity } from "../player";
-import { usePlaylistStore } from "../store/playlist";
-import { setup, moveCubeRandom, createCube, wrap, TILECOUNT } from "../game";
-import { Track } from "../models/Playlists";
-import { animate } from "../colors";
-import { createText } from "../game";
+start();
 
-const { camera, renderer, scene, objects: { head, platform } } = await setup();
+// import { BoxGeometry, Color, Mesh, MeshBasicMaterial, MeshStandardMaterial, TextureLoader, sRGBEncoding } from "three";
+// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// import { update } from "@tweenjs/tween.js";
+// import { storeToRefs } from "pinia";
+// import { watch } from "vue";
+// import axios from "axios";
+// import ColorThief from "colorthief";
 
-const orbit = new OrbitControls(camera, renderer.domElement);
-const colorThief = new ColorThief();
+// import { velocity } from "../player";
+// import { usePlaylistStore } from "../store/playlist";
+// import { setup, moveCubeRandom, createCube, wrap, TILECOUNT } from "../game";
+// import { Track } from "../models/Playlists";
+// import { animate } from "../colors";
+// import { createText } from "../game";
 
-const playlistStore = usePlaylistStore();
-const { selectedPlaylists, currentTrack } = storeToRefs(playlistStore);
+// const { camera, renderer, scene, objects: { head, platform } } = await setup();
 
-const food = createCube();
-moveCubeRandom(food);
-scene.add(food);
+// const orbit = new OrbitControls(camera, renderer.domElement);
+// const colorThief = new ColorThief();
 
-const trail = [head];
-const history = [velocity];
+// const playlistStore = usePlaylistStore();
+// const { selectedPlaylists, currentTrack } = storeToRefs(playlistStore);
 
-let nextTick = false;
-let nextBlock: Mesh<BoxGeometry, MeshStandardMaterial> | undefined = undefined;
+// const food = createCube();
+// moveCubeRandom(food);
+// scene.add(food);
 
-let songText: ReturnType<typeof createText>;
-let songCover: Mesh<BoxGeometry, MeshBasicMaterial>;
-const loader = new TextureLoader();
+// const trail = [head];
+// const history = [velocity];
 
-const handleMoves = async () => {
-  history.push(velocity.clone());
+// let nextTick = false;
+// let nextBlock: Mesh<BoxGeometry, MeshStandardMaterial> | undefined = undefined;
 
-  while (history.length > trail.length) {
-    history.shift();
-  }
+// let songText: ReturnType<typeof createText>;
+// let songCover: Mesh<BoxGeometry, MeshBasicMaterial>;
+// const loader = new TextureLoader();
 
-  for (let index = 0; index < trail.length; index++) {
-    let block = trail[index];
-    let move = history[index];
+// const handleMoves = async () => {
+//   history.push(velocity.clone());
 
-    block.position.x += move.x;
-    block.position.z += move.z;
+//   while (history.length > trail.length) {
+//     history.shift();
+//   }
 
-    wrap(block);
-  }
+//   for (let index = 0; index < trail.length; index++) {
+//     let block = trail[index];
+//     let move = history[index];
 
-  if (nextTick && nextBlock) {
-    scene.add(nextBlock);
-    trail.splice(0, 0, nextBlock);
-    nextTick = false;
-  }
+//     block.position.x += move.x;
+//     block.position.z += move.z;
 
-  // check if food is eaten
-  if (
-    head.position.x === food.position.x &&
-    head.position.z === food.position.z
-  ) {
-    nextBlock = trail[0].clone();
-    nextTick = true;
+//     wrap(block);
+//   }
 
-    moveCubeRandom(food);
+//   if (nextTick && nextBlock) {
+//     scene.add(nextBlock);
+//     trail.splice(0, 0, nextBlock);
+//     nextTick = false;
+//   }
 
-    // select random playlist and song to play
-    if (selectedPlaylists.value.length > 0) {
-      let randomList =
-        selectedPlaylists.value[
-          Math.floor(Math.random() * selectedPlaylists.value.length)
-        ];
+//   // check if food is eaten
+//   if (
+//     head.position.x === food.position.x &&
+//     head.position.z === food.position.z
+//   ) {
+//     nextBlock = trail[0].clone();
+//     nextTick = true;
 
-      let items = randomList.items;
-      if (!items || items.length === 0) return;
+//     moveCubeRandom(food);
 
-      let randomItem: Track = items[Math.floor(Math.random() * items.length)];
-      await axios.put("/me/player/play", {
-        uris: [randomItem.uri],
-      });
+//     // select random playlist and song to play
+//     if (selectedPlaylists.value.length > 0) {
+//       let randomList =
+//         selectedPlaylists.value[
+//           Math.floor(Math.random() * selectedPlaylists.value.length)
+//         ];
 
-      currentTrack.value = randomItem;
+//       let items = randomList.items;
+//       if (!items || items.length === 0) return;
 
-      // song title
-      scene.remove(songText)
-      songText = createText(randomItem.name);
-      scene.add(songText);
+//       let randomItem: Track = items[Math.floor(Math.random() * items.length)];
+//       await axios.put("/me/player/play", 
+//         uris: [randomItem.uri],
+//       });
 
-      // song cover
-      scene.remove()
-      const geometry = new BoxGeometry(3, 3, 0);
-      const material = new MeshBasicMaterial();
-      songCover = new Mesh(geometry, material);
+//       currentTrack.value = randomItem;
 
-      const texture = await loader.loadAsync(randomItem.album.images[0].url);
-      texture.encoding = sRGBEncoding;
-      songCover.material.map = texture;
-      songCover.position.y = 2;
-      songCover.position.z = (-TILECOUNT / 2) - 2;
-      songCover.position.x = (-TILECOUNT / 2) + 1;
-      scene.add(songCover);
-    }
-  }
-};
+//       // song title
+//       scene.remove(songText)
+//       songText = createText(randomItem.name);
+//       scene.add(songText);
 
-const element = document.createElement("img");
-element.crossOrigin = "anonymous";
-element.addEventListener("load", () => {
-  let colors = colorThief.getPalette(element);
+//       // song cover
+//       scene.remove()
+//       const geometry = new BoxGeometry(3, 3, 0);
+//       const material = new MeshBasicMaterial();
+//       songCover = new Mesh(geometry, material);
 
-  if (!colors) return;
-  animate(scene.background as Color, colors[0]);
-  animate(platform.material.color, colors[1]);
+//       const texture = await loader.loadAsync(randomItem.album.images[0].url);
+//       texture.encoding = sRGBEncoding;
+//       songCover.material.map = texture;
+//       songCover.position.y = 2;
+//       songCover.position.z = (-TILECOUNT / 2) - 2;
+//       songCover.position.x = (-TILECOUNT / 2) + 1;
+//       scene.add(songCover);
+//     }
+//   }
+// };
 
-  for (let block of trail) {
-    animate(block.material.color, colors[2]);
-  }
-})
+// const element = document.createElement("img");
+// element.crossOrigin = "anonymous";
+// element.addEventListener("load", () => {
+//   let colors = colorThief.getPalette(element);
 
-// change colors of objects when the song changes
-watch(currentTrack, async () => {
-  let url = currentTrack.value?.album.images[0].url;
-  if (!url) return;
-  element.src = url;
-})
+//   if (!colors) return;
+//   animate(scene.background as Color, colors[0]);
+//   animate(platform.material.color, colors[1]);
 
-setInterval(handleMoves, 1000 / 10);
-const render = () => {
-  requestAnimationFrame(render);
-  update();
-  orbit.update();
-  renderer.render(scene, camera);
-};
+//   for (let block of trail) {
+//     animate(block.material.color, colors[2]);
+//   }
+// })
 
-render();
+// // change colors of objects when the song changes
+// watch(currentTrack, async () => {
+//   let url = currentTrack.value?.album.images[0].url;
+//   if (!url) return;
+//   element.src = url;
+// })
+
+// setInterval(handleMoves, 1000 / 10);
+// const render = () => {
+//   requestAnimationFrame(render);
+//   update();
+//   orbit.update();
+//   renderer.render(scene, camera);
+// };
+
+// render();
+
 </script>
 
 <template></template>
