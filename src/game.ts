@@ -79,18 +79,16 @@ export const gameMoveLoop = () => {
 
 export const playNextTrack = async () => {
   const playlistStore = usePlaylistStore();
-
   if (playlistStore.selectedPlaylists.length === 0) return;
   
-  const playlist = getRandomItem(playlistStore.selectedPlaylists);
-  if (!playlist.items || playlist.items.length === 0) return;
+  const playlistId = getRandomItem(playlistStore.selectedPlaylists);
+  const playlistTracks = playlistStore.playlistTracks[playlistId];
 
-  const track = getRandomItem(playlist.items);
+  const track = getRandomItem(playlistTracks.tracks);
   await axios.put("/me/player/play", { uris: [track.uri] });
 
   playlistStore.currentTrack = track;
-  
-  updateSongObjects(track.name, track.album.images[0].url)
+  updateSongObjects(track.name, track.album.images[0].url);
 }
 
 let songText: Awaited<ReturnType<typeof createText>>;

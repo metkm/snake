@@ -7,7 +7,7 @@ export interface PlaylistsResponse {
   offset: number,
   previous: string | null,
   total: number,
-  items: SimplifiedPlaylistWithItems[]
+  items: SimplifiedPlaylist[]
 }
 
 export interface SimplifiedPlaylist {
@@ -40,9 +40,9 @@ export interface SimplifiedPlaylist {
   uri: string
 }
 
-export interface SimplifiedPlaylistWithItems extends SimplifiedPlaylist {
-  items: Track[] | null
-}
+// export interface SimplifiedPlaylistWithItems extends SimplifiedPlaylist {
+//   items: Track[] | null
+// }
 
 export interface AddedBy {
   external_urls: ExternalUrls,

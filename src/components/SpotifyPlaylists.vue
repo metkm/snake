@@ -1,31 +1,64 @@
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
 import { PlaylistTracksResponse, PlaylistsResponse } from "../models/Playlists";
-import { usePlaylistStore } from "../store/playlist";
-import { storeToRefs } from "pinia";
 import axios from "axios";
 
+import { usePlaylistStore } from "../store/playlist";
+import { storeToRefs } from "pinia";
+
+const response = await axios<PlaylistsResponse>("/me/playlists");
+const playlists = response.data.items;
+
 const playlistStore = usePlaylistStore();
-const { selectedPlaylists } = storeToRefs(playlistStore);
+const { selectedPlaylists, playlistTracks } = storeToRefs(playlistStore);
 
-const response = await axios("/me/playlists");
-const playlists = ref<PlaylistsResponse>(response.data);
-
-watchEffect(async () => {
-  for (let playlist of selectedPlaylists.value) {
-    if (playlist.items) continue;
-
-    const response = await axios<PlaylistTracksResponse>(
-      `/playlists/${playlist.id}/tracks`
-    );
-
-    playlist.items = response.data.items.map((item) => item.track);
+const onChange = async (id: string, name: string) => {
+  if (playlistTracks.value[id]) {
+    delete playlistTracks.value[id];
+    return;
   }
-});
+
+  const response = await axios<PlaylistTracksResponse>(
+    `/playlists/${id}/tracks`
+  );
+  const items = response.data.items.map((item) => item.track);
+
+  playlistTracks.value[id] = {
+    name,
+    tracks: items,
+  };
+};
 </script>
 
 <template>
-  <div
+  <div>
+    <ul class="grid bg-slate-900 text-white rounded-lg overflow-hidden">
+      <li
+        v-for="list in playlists"
+        :key="list.id"
+        class="flex justify-between p-2 hover:bg-slate-800 gap-4"
+      >
+        <div class="flex gap-2 items-center">
+          <img
+            :src="list.images[0].url"
+            width="40"
+            height="40"
+            class="rounded object-cover aspect-square"
+          />
+          <label :for="list.id" class="text-sm">{{ list.name }}</label>
+        </div>
+
+        <input
+          v-model="selectedPlaylists"
+          @change="onChange(list.id, list.name)"
+          :value="list.id"
+          :id="list.id"
+          type="checkbox"
+        />
+      </li>
+    </ul>
+  </div>
+
+  <!-- <div
     class="grid text-white rounded-lg overflow-hidden shadow transition-colors"
   >
     <div
@@ -50,5 +83,5 @@ watchEffect(async () => {
       />
       <p class="text-sm select-none">{{ list.name }}</p>
     </div>
-  </div>
+  </div> -->
 </template>
