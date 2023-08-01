@@ -44,6 +44,7 @@ const history = [velocity];
 const trail = [head];
 let nextTick = false;
 let nextBlock: typeof trail[0];
+let gamescore = 0;
 
 export const gameMoveLoop = () => {
   history.push(velocity.clone());
@@ -69,11 +70,14 @@ export const gameMoveLoop = () => {
   }
 
   if (didEat(head, food)) {
+    if (gamescore % 10 === 0) {
+      playNextTrack();
+    }
     moveCubeRandom(food);
-    playNextTrack();
 
     nextTick = true;
     nextBlock = trail[0].clone();
+    gamescore++;
   }
 }
 
