@@ -54,11 +54,11 @@ export const createText = async (text: string) => {
   const songGeometry = new TextGeometry(text, {
     font,
     size: 0.5,
-    height: 0.1,
+    height: 0,
   });
   const material = new MeshBasicMaterial({ color: "white" });
   const songMesh = new Mesh(songGeometry, material);
-  songMesh.position.z = -TILECOUNT / 2 - 2;
+  songMesh.position.z = -TILECOUNT / 2 - 2.5;
   songMesh.position.x = -2;
   songMesh.position.y = 0.5;
 
