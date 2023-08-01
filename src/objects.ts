@@ -8,7 +8,7 @@ import {
   sRGBEncoding,
   TextureLoader,
 } from "three";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
+import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 
 export const TILECOUNT = 10;
@@ -48,9 +48,12 @@ export const createCube = (
   return cube;
 };
 
-export const createText = async (text: string) => {
-  const font = await fontLoader.loadAsync("/src/assets/Inter_Regular.json");
+let font: Font;
+fontLoader.load("/src/assets/NotoSans.json", result => {
+  font = result;
+})
 
+export const createText = async (text: string) => {
   const songGeometry = new TextGeometry(text, {
     font,
     size: 0.5,
