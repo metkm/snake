@@ -1,6 +1,26 @@
 import { Tween, Easing } from "@tweenjs/tween.js";
-import { RGBColor } from "colorthief";
+import ColorThief, { RGBColor } from "colorthief";
 import { Color } from "three";
+import { scene, platform, trail } from "./game";
+
+const colorThief = new ColorThief();
+const element = document.createElement("img");
+element.crossOrigin = "anonymous";
+element.addEventListener("load", () => {
+  let colors = colorThief.getPalette(element);
+  if (!colors) return;
+  
+  animate(scene.background as Color, colors[0]);
+  animate(platform.material.color, colors[1]);
+
+  for (let block of trail) {
+    animate(block.material.color, colors[2]);
+  }
+})
+
+export const updateElementImage = (uri: string) => {
+  element.src = uri;
+}
 
 export const animate = (from: Color, to: RGBColor) => {
   new Tween(from)

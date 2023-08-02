@@ -1,24 +1,21 @@
-import { BoxGeometry, Color, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { update } from "@tweenjs/tween.js";
 
 import { wrap, createText, createSongCover, createCube, moveCubeRandom } from "./objects";
 import { usePlaylistStore } from "./store/playlist";
+import { updateElementImage } from "./colors";
 import { didEat, velocity } from "./player";
 import { getRandomItem } from "./utils";
 import { setup } from "./setup";
 
 import axios from "axios";
-import ColorThief from "colorthief";
-import { animate } from "./colors";
 
-const {
+export const {
   renderer,
   scene,
   camera,
-  objects: {
-    head,
-    platform
-  }
+  head,
+  platform
 } = setup();
 
 const food = createCube();
@@ -40,8 +37,8 @@ export const gameLoop = (
   requestAnimationFrame(() => gameLoop(renderer, scene, camera));
 }
 
-const history = [velocity];
-const trail = [head];
+export const history = [velocity];
+export const trail = [head];
 let nextTick = false;
 let nextBlock: typeof trail[0];
 let gamescore = 0;
@@ -98,23 +95,8 @@ export const playNextTrack = async () => {
 let songText: Awaited<ReturnType<typeof createText>>;
 let songCover: Mesh<BoxGeometry, MeshBasicMaterial>;
 
-const colorThief = new ColorThief();
-const element = document.createElement("img");
-element.crossOrigin = "anonymous";
-element.addEventListener("load", () => {
-  let colors = colorThief.getPalette(element);
-  if (!colors) return;
-  
-  animate(scene.background as Color, colors[0]);
-  animate(platform.material.color, colors[1]);
-
-  for (let block of trail) {
-    animate(block.material.color, colors[2]);
-  }
-})
-
 export const updateSongObjects = async (name: string, uri: string) => {
-  element.src = uri;
+  updateElementImage(uri);
 
   scene.remove(songText);
   songText = await createText(name);
