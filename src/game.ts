@@ -18,10 +18,6 @@ export const {
   platform
 } = setup();
 
-const food = createCube();
-moveCubeRandom(food);
-scene.add(food);
-
 export const start = () => {
   gameLoop(renderer, scene, camera);
   setInterval(gameMoveLoop, 1000 / 15);
@@ -44,6 +40,10 @@ let nextBlock: typeof trail[0];
 let gamescore = 0;
 
 let gamescoreText: ReturnType<typeof createText>;
+
+const food = createCube();
+moveCubeRandom(food);
+scene.add(food);
 
 export const gameMoveLoop = () => {
   history.push(velocity.clone());

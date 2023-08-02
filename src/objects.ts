@@ -10,6 +10,7 @@ import {
 } from "three";
 import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { trail } from "./game";
 
 export const TILECOUNT = 10;
 export const UNITSIZE = 0.5;
@@ -49,9 +50,9 @@ export const createCube = (
 };
 
 let font: Font;
-fontLoader.load("/src/assets/NotoSans.json", result => {
+fontLoader.load("/src/assets/NotoSans.json", (result) => {
   font = result;
-})
+});
 
 export const createText = (text: string) => {
   const songGeometry = new TextGeometry(text, {
@@ -76,11 +77,15 @@ export const moveCubeRandom: Fn = (cube) => {
   let foodX = Math.round(Math.random() * TILELIMIT);
   let foodZ = Math.round(Math.random() * TILELIMIT);
 
-  if (
-    foodX === cube.position.x &&
-    foodZ === cube.position.z
-  ) {
+  if (foodX === cube.position.x && foodZ === cube.position.z) {
     moveCubeRandom(cube);
+  }
+
+  for (let item of trail) {
+    if (item.position.x === foodX && item.position.z === foodZ) {
+      moveCubeRandom(cube);
+      return;
+    }
   }
 
   cube.position.x = foodX;
