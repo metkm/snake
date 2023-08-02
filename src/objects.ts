@@ -76,6 +76,13 @@ export const moveCubeRandom: Fn = (cube) => {
   let foodX = Math.round(Math.random() * TILELIMIT);
   let foodZ = Math.round(Math.random() * TILELIMIT);
 
+  if (
+    foodX === cube.position.x &&
+    foodZ === cube.position.z
+  ) {
+    moveCubeRandom(cube);
+  }
+
   cube.position.x = foodX;
   cube.position.z = foodZ;
 
