@@ -84,6 +84,7 @@ export const gameMoveLoop = () => {
 
     nextTick = true;
     nextBlock = trail[0].clone();
+    nextBlock.material = trail[0].material.clone();
   }
 }
 
