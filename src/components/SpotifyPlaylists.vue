@@ -18,7 +18,13 @@ const onChange = async (id: string, name: string) => {
   }
 
   const response = await axios<PlaylistTracksResponse>(
-    `/playlists/${id}/tracks`
+    `/playlists/${id}/tracks`,
+    {
+      params: {
+        limit: 50,
+        fields: "items(track(!available_markets),track(album(!available_markets)))"
+      }
+    }
   );
   const items = response.data.items.map((item) => item.track);
 
