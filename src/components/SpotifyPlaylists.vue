@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlaylistTracksResponse, PlaylistsResponse } from "../models/Playlists";
 import axios from "axios";
+import BaseInputCheckbox from "./ui/BaseInputCheckbox.vue";
 
 import { usePlaylistStore } from "../store/playlist";
 import { storeToRefs } from "pinia";
@@ -22,8 +23,9 @@ const onChange = async (id: string, name: string) => {
     {
       params: {
         limit: 50,
-        fields: "items(track(!available_markets),track(album(!available_markets)))"
-      }
+        fields:
+          "items(track(!available_markets),track(album(!available_markets)))",
+      },
     }
   );
   const items = response.data.items.map((item) => item.track);
@@ -36,28 +38,28 @@ const onChange = async (id: string, name: string) => {
 </script>
 
 <template>
-  <ul class="bg-neutral-900/40 text-white rounded-lg overflow-hidden grid gap-2 py-2">
+  <ul class="grid gap-2 bg-neutral-900/40 text-white p-2 rounded-lg">
     <li
       v-for="list in playlists"
       :key="list.id"
-      class="flex gap-2 items-center max-w-xs px-2"
+      class="flex items-center max-w-xs"
     >
       <img
         :src="list.images[0].url"
         width="40"
         height="40"
-        class="rounded object-cover aspect-square"
+        class="object-cover aspect-square rounded"
       />
-      <label :for="list.id" class="text-sm truncate w-full">{{ list.name }}</label>
-
-      <input
-        v-model="selectedPlaylists"
-        @change="onChange(list.id, list.name)"
-        :value="list.id"
-        :id="list.id"
-        type="checkbox"
-        class="appearance-none w-4 h-4 aspect-square bg-slate-900/20 rounded checked:bg-slate-900 checked:bg-[url('/tick.svg')]"
-      />
+      
+      <div class="grow flex items-center justify-between p-2 gap-2 overflow-hidden">
+        <label :for="list.id" class="truncate text-sm w-full">{{ list.name }}</label>
+        <BaseInputCheckbox
+          v-model="selectedPlaylists"
+          @change="onChange(list.id, list.name)"
+          :value="list.id"
+          :id="list.id"
+        />
+      </div>
     </li>
   </ul>
 </template>
