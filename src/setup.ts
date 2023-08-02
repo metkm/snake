@@ -4,7 +4,6 @@ import { setupKeyEvents } from "./player";
 
 export const initScene = () => {
   const scene = new Scene();
-
   scene.background = new Color("#917C78");
 
   return scene;

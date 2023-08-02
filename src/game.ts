@@ -43,6 +43,8 @@ let nextTick = false;
 let nextBlock: typeof trail[0];
 let gamescore = 0;
 
+let gamescoreText: ReturnType<typeof createText>;
+
 export const gameMoveLoop = () => {
   history.push(velocity.clone());
   
@@ -67,14 +69,21 @@ export const gameMoveLoop = () => {
   }
 
   if (didEat(head, food)) {
-    if (gamescore % 10 === 0) {
+    const playlistStore = usePlaylistStore();
+    gamescore++;
+
+    scene.remove(gamescoreText);
+    gamescoreText = createText(gamescore.toString());
+    gamescoreText.position.y = 3;
+    scene.add(gamescoreText);
+
+    if (gamescore % 10 === 0 || !playlistStore.currentTrack) {
       playNextTrack();
     }
     moveCubeRandom(food);
 
     nextTick = true;
     nextBlock = trail[0].clone();
-    gamescore++;
   }
 }
 
@@ -99,7 +108,7 @@ export const updateSongObjects = async (name: string, uri: string) => {
   updateElementImage(uri);
 
   scene.remove(songText);
-  songText = await createText(name);
+  songText = createText(name);
   scene.add(songText);
 
   scene.remove(songCover);

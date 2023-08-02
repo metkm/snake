@@ -53,7 +53,7 @@ fontLoader.load("/src/assets/NotoSans.json", result => {
   font = result;
 })
 
-export const createText = async (text: string) => {
+export const createText = (text: string) => {
   const songGeometry = new TextGeometry(text, {
     font,
     size: 0.5,
