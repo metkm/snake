@@ -50,7 +50,7 @@ export const createCube = (
 };
 
 let font: Font;
-fontLoader.load("/src/assets/NotoSans.json", (result) => {
+fontLoader.load("./src/assets/NotoSans.json", (result) => {
   font = result;
 });
 
