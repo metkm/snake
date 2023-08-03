@@ -85,7 +85,7 @@ export const gameMoveLoop = () => {
 
     scene.remove(gamescoreText);
     gamescoreText = createText(gamescore.toString());
-    gamescoreText.position.y = 3;
+    gamescoreText.position.y = 2.7;
     scene.add(gamescoreText);
 
     if (gamescore % settingsStore.songChangeLimit === 0 || !playlistStore.currentTrack) {
