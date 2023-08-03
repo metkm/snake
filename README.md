@@ -1,4 +1,5 @@
-# snake
 
-https://github.com/metkm/snake/assets/54271295/e3220567-29bf-4432-955c-de171775e317
+## Preview
+https://github.com/metkm/snake/assets/54271295/436dc9c6-01dc-4980-9236-188aa68be9f4
+
 
