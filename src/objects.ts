@@ -111,10 +111,3 @@ export const wrap: Fn = (block) => {
     block.position.z = TILELIMIT;
   }
 };
-
-export const createFood = () => {
-  const food = createCube();
-  return {
-    food,
-  };
-};
