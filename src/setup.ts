@@ -1,5 +1,13 @@
-import { Scene, WebGLRenderer, PerspectiveCamera, DirectionalLight, PCFSoftShadowMap, Vector3, Color, GridHelper } from "three";
-import { createCube } from "./objects";
+import {
+  Scene,
+  WebGLRenderer,
+  PerspectiveCamera,
+  DirectionalLight,
+  PCFSoftShadowMap,
+  Vector3,
+  Color,
+} from "three";
+import { TILECOUNT, createCube } from "./objects";
 import { setupKeyEvents } from "./player";
 
 export const initScene = () => {
@@ -7,7 +15,7 @@ export const initScene = () => {
   scene.background = new Color("#917C78");
 
   return scene;
-}
+};
 
 export const initCamera = () => {
   const camera = new PerspectiveCamera(
@@ -23,7 +31,7 @@ export const initCamera = () => {
   camera.lookAt(new Vector3(0, 0, 0));
 
   return camera;
-}
+};
 
 export const initRenderer = () => {
   const renderer = new WebGLRenderer({
@@ -37,7 +45,7 @@ export const initRenderer = () => {
   document.body.appendChild(renderer.domElement);
 
   return renderer;
-}
+};
 
 export const initLightning = () => {
   const light = new DirectionalLight("#ffffff", 2);
@@ -51,9 +59,9 @@ export const initLightning = () => {
   light.shadow.mapSize.height = 1024;
   light.shadow.mapSize.width = 1024;
   light.castShadow = true;
-  
+
   return light;
-}
+};
 
 export const setup = () => {
   const scene = initScene();
@@ -61,10 +69,10 @@ export const setup = () => {
   const renderer = initRenderer();
   const lightning = initLightning();
 
-  const gridHelper = new GridHelper(10, 20, 0x808080, 0x808080);
-  gridHelper.position.x = 0.25;
-  gridHelper.position.y = -0.25;
-  gridHelper.position.z = 0.25;
+  // const gridHelper = new GridHelper(10, 20, 0x808080, 0x808080);
+  // gridHelper.position.x = 0.25;
+  // gridHelper.position.y = -0.25;
+  // gridHelper.position.z = 0.25;
 
   window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -75,10 +83,12 @@ export const setup = () => {
   setupKeyEvents();
 
   const head = createCube(undefined, undefined, undefined, "#667761");
-  const platform = createCube(50, 0.5, 50, "#9B8884");
+  const platform = createCube(TILECOUNT, 0.5, TILECOUNT, "#9B8884");
   platform.position.y = -0.51;
+  platform.position.x = 0.25;
+  platform.position.z = 0.25;
 
-  scene.add(head, platform, lightning, gridHelper);
+  scene.add(head, platform, lightning);
 
   return {
     scene,
