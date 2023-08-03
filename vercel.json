@@ -3,10 +3,6 @@
     {
       "source": "/auth",
       "destination": "/index.html"
-    },
-    {
-      "source": "/src/assets/NotoSans.json",
-      "destination": "src/assets/NotoSans.json"
     }
   ]
 }
