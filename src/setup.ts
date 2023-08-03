@@ -1,5 +1,5 @@
-import { Scene, WebGLRenderer, PerspectiveCamera, DirectionalLight, PCFSoftShadowMap, Vector3, Color } from "three";
-import { createCube, TILECOUNT } from "./objects";
+import { Scene, WebGLRenderer, PerspectiveCamera, DirectionalLight, PCFSoftShadowMap, Vector3, Color, GridHelper } from "three";
+import { createCube } from "./objects";
 import { setupKeyEvents } from "./player";
 
 export const initScene = () => {
@@ -61,6 +61,11 @@ export const setup = () => {
   const renderer = initRenderer();
   const lightning = initLightning();
 
+  const gridHelper = new GridHelper(10, 20, 0x808080, 0x808080);
+  gridHelper.position.x = 0.25;
+  gridHelper.position.y = -0.25;
+  gridHelper.position.z = 0.25;
+
   window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -73,7 +78,7 @@ export const setup = () => {
   const platform = createCube(50, 0.5, 50, "#9B8884");
   platform.position.y = -0.51;
 
-  scene.add(head, platform, lightning);
+  scene.add(head, platform, lightning, gridHelper);
 
   return {
     scene,

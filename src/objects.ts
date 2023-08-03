@@ -100,11 +100,11 @@ export const wrap: Fn = (block) => {
   }
 
   if (block.position.x > TILELIMIT) {
-    block.position.x = -TILELIMIT;
+    block.position.x = -TILELIMIT + 0.5;
   }
 
   if (block.position.z > TILELIMIT) {
-    block.position.z = -TILELIMIT;
+    block.position.z = -TILELIMIT + 0.5;
   }
 
   if (block.position.z < -TILELIMIT) {
