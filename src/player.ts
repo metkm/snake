@@ -10,16 +10,24 @@ export const setupKeyEvents = () => {
 export const keyEvents = ({ code }: KeyboardEvent) => {
   switch (code) {
     case "KeyW":
-      velocity.set(0, 0, -UNITSIZE);
+      if (velocity.z !== UNITSIZE) {
+        velocity.set(0, 0, -UNITSIZE);
+      }
       break;
     case "KeyS":
-      velocity.set(0, 0, UNITSIZE);
+      if (velocity.z !== -UNITSIZE) {
+        velocity.set(0, 0, UNITSIZE);
+      }
       break;
     case "KeyA":
-      velocity.set(-UNITSIZE, 0, 0);
+      if (velocity.x !== UNITSIZE) {
+        velocity.set(-UNITSIZE, 0, 0);
+      }
       break;
     case "KeyD":
-      velocity.set(UNITSIZE, 0, 0);
+      if (velocity.x !== -UNITSIZE) {
+        velocity.set(UNITSIZE, 0, 0);
+      }
       break;
   }
 }
