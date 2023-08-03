@@ -5,6 +5,7 @@ import SpotifyLogin from "../components/SpotifyLogin.vue";
 import { storeToRefs } from "pinia";
 import { useProfileStore } from "../store/profile";
 import SpotifyPlaylists from "../components/SpotifyPlaylists.vue";
+import SpotifySettings from "../components/SpotifySettings.vue";
 
 const profileStore = useProfileStore();
 const { profile } = storeToRefs(profileStore);
@@ -19,7 +20,9 @@ const { profile } = storeToRefs(profileStore);
     </template>
   </Suspense>
 
-  <div class="fixed bottom-5 right-5 grid gap-2">
+  <div class="fixed bottom-5 right-5 grid gap-2 text-white text-sm">
+    <SpotifySettings v-if="profile" />
+
     <Suspense>
       <SpotifyPlaylists v-if="profile" />
       <template #fallback>

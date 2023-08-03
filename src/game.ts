@@ -2,6 +2,7 @@ import { BoxGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, WebGLRe
 import { update } from "@tweenjs/tween.js";
 
 import { wrap, createText, createSongCover, createCube, moveCubeRandom } from "./objects";
+import { useSettingsStore } from "./store/settings";
 import { usePlaylistStore } from "./store/playlist";
 import { updateElementImage } from "./colors";
 import { didEat, velocity } from "./player";
@@ -79,6 +80,7 @@ export const gameMoveLoop = () => {
 
   if (didEat(head, food)) {
     const playlistStore = usePlaylistStore();
+    const settingsStore = useSettingsStore();
     gamescore++;
 
     scene.remove(gamescoreText);
@@ -86,7 +88,7 @@ export const gameMoveLoop = () => {
     gamescoreText.position.y = 3;
     scene.add(gamescoreText);
 
-    if (gamescore % 10 === 0 || !playlistStore.currentTrack) {
+    if (gamescore % settingsStore.songChangeLimit === 0 || !playlistStore.currentTrack) {
       playNextTrack();
     }
     moveCubeRandom(food);

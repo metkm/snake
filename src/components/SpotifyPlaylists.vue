@@ -38,7 +38,7 @@ const onChange = async (id: string, name: string) => {
 </script>
 
 <template>
-  <ul class="grid gap-2 bg-neutral-900/40 text-white p-2 rounded-lg">
+  <ul class="grid gap-2 bg-neutral-900/40 p-2 rounded-lg">
     <li
       v-for="list in playlists"
       :key="list.id"
@@ -52,7 +52,7 @@ const onChange = async (id: string, name: string) => {
       />
       
       <div class="grow flex items-center justify-between p-2 gap-2 overflow-hidden">
-        <label :for="list.id" class="truncate text-sm w-full">{{ list.name }}</label>
+        <label :for="list.id" class="truncate w-full">{{ list.name }}</label>
         <BaseInputCheckbox
           v-model="selectedPlaylists"
           @change="onChange(list.id, list.name)"
