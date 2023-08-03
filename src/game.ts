@@ -110,6 +110,8 @@ export const resetGame = () => {
 
   head.position.z = 0;
   head.position.x = 0;
+  scene.remove(gamescoreText);
+  gamescore = 0;
 }
 
 export const playNextTrack = async () => {
