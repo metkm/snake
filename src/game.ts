@@ -33,8 +33,8 @@ export const gameLoop = (
   requestAnimationFrame(() => gameLoop(renderer, scene, camera));
 }
 
-export const history = [velocity];
-export const trail = [head];
+export let history = [velocity];
+export let trail = [head];
 let nextTick = false;
 let nextBlock: typeof trail[0];
 let gamescore = 0;
@@ -55,6 +55,15 @@ export const gameMoveLoop = () => {
   for (let i = 0; i < trail.length; i++) {
     const block = trail[i];
     const move = history[i];
+
+    // check if crashed to itself
+    if (
+      head.id !== block.id &&
+      block.position.x === head.position.x &&
+      block.position.z === head.position.z
+    ) {
+      resetGame();
+    }
 
     block.position.x += move.x;
     block.position.z += move.z;
@@ -86,6 +95,21 @@ export const gameMoveLoop = () => {
     nextBlock = trail[0].clone();
     nextBlock.material = trail[0].material.clone();
   }
+}
+
+export const resetGame = () => {
+  velocity.set(0, 0, 0);
+
+  for (let i = trail.length - 2; i >= 0; i--) {
+    const block = trail[i];
+    block.removeFromParent();
+  }
+
+  history = [velocity];
+  trail = [head];
+
+  head.position.z = 0;
+  head.position.x = 0;
 }
 
 export const playNextTrack = async () => {
