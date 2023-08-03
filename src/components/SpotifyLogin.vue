@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { redirectToAuthFlow } from '../spotify';
 
 import { storeToRefs } from "pinia";
-import { useProfileStore } from "../store";
+import { useProfileStore } from "../store/profile";
 
 const href = ref("");
 const profileStore = useProfileStore();

@@ -14,13 +14,8 @@ export const usePlaylistStore = defineStore("playlists", () => {
   const playlistTracks = ref<PlaylistTracks>({});
   const currentTrack = ref<Track>();
 
-  // const isSelected = (list: BasicPlaylist) => {
-  //   return selectedPlaylists.value.includes(list);
-  // }
-
   return {
     selectedPlaylists,
-    // isSelected,
     currentTrack,
     playlistTracks
   }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
+import { useProfileStore } from "../store/profile";
 import { getAcessToken } from "../spotify";
-import { useProfileStore } from "../store";
 import { User } from "../models/User";
 import axios from "axios";
 

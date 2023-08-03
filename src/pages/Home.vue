@@ -3,7 +3,7 @@ import GameCanvas from "../components/GameCanvas.vue";
 import SpotifyLogin from "../components/SpotifyLogin.vue";
 
 import { storeToRefs } from "pinia";
-import { useProfileStore } from "../store";
+import { useProfileStore } from "../store/profile";
 import SpotifyPlaylists from "../components/SpotifyPlaylists.vue";
 
 const profileStore = useProfileStore();
