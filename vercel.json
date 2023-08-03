@@ -1,11 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/src/assets/NotoSans.json",
-      "destination": "/src/assets/NotoSans.json"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/auth",
       "destination": "/index.html"
     }
   ]
