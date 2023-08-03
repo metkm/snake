@@ -70,7 +70,7 @@ export const setup = () => {
   setupKeyEvents();
 
   const head = createCube(undefined, undefined, undefined, "#667761");
-  const platform = createCube(TILECOUNT + 2, 0.5, TILECOUNT + 2, "#9B8884");
+  const platform = createCube(50, 0.5, 50, "#9B8884");
   platform.position.y = -0.51;
 
   scene.add(head, platform, lightning);
