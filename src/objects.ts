@@ -95,19 +95,19 @@ export const moveCubeRandom: Fn = (cube) => {
 };
 
 export const wrap: Fn = (block) => {
-  if (block.position.x < -TILELIMIT) {
+  if (block.position.x < -TILELIMIT + UNITSIZE) {
     block.position.x = TILELIMIT;
   }
 
   if (block.position.x > TILELIMIT) {
-    block.position.x = -TILELIMIT + 0.5;
+    block.position.x = -TILELIMIT + UNITSIZE;
   }
 
   if (block.position.z > TILELIMIT) {
-    block.position.z = -TILELIMIT + 0.5;
+    block.position.z = -TILELIMIT + UNITSIZE;
   }
 
-  if (block.position.z < -TILELIMIT) {
+  if (block.position.z < -TILELIMIT + UNITSIZE) {
     block.position.z = TILELIMIT;
   }
 };
