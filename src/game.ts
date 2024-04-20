@@ -88,6 +88,11 @@ export const gameMoveLoop = () => {
     gamescoreText.position.y = 2.7;
     scene.add(gamescoreText);
 
+    const albumUrl = playlistStore.currentTrack?.album.images[0].url;
+    if (albumUrl) {
+      updateElementImage(albumUrl);
+    }
+
     if (gamescore % settingsStore.songChangeLimit === 0 || !playlistStore.currentTrack) {
       playNextTrack();
     }

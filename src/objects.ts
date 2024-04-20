@@ -5,7 +5,7 @@ import {
   MeshBasicMaterial,
   BufferGeometry,
   Material,
-  sRGBEncoding,
+  SRGBColorSpace,
   TextureLoader,
 } from "three";
 import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
@@ -25,7 +25,7 @@ export const createSongCover = async (uri: string) => {
   const songCover = new Mesh(geometry, material);
 
   const texture = await textureLoader.loadAsync(uri);
-  texture.encoding = sRGBEncoding;
+  texture.colorSpace = SRGBColorSpace;
   songCover.material.map = texture;
   songCover.position.y = 2;
   songCover.position.z = -TILECOUNT / 2 - 2;
@@ -50,7 +50,7 @@ export const createCube = (
 };
 
 let font: Font;
-fontLoader.load("/NotoSans.json", (result) => {
+fontLoader.load("/NotoSans.json", (result: Font) => {
   font = result;
 });
 

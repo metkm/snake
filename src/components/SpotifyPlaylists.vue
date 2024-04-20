@@ -23,8 +23,6 @@ const onChange = async (id: string, name: string) => {
     {
       params: {
         limit: 50,
-        fields:
-          "items(track(!available_markets),track(album(!available_markets)))",
       },
     }
   );
@@ -38,7 +36,7 @@ const onChange = async (id: string, name: string) => {
 </script>
 
 <template>
-  <ul class="grid gap-2 bg-neutral-900/40 p-2 rounded-lg">
+  <ul class="grid gap-2 p-2 rounded-lg bg-neutral-900/40">
     <li
       v-for="list in playlists"
       :key="list.id"
@@ -48,11 +46,11 @@ const onChange = async (id: string, name: string) => {
         :src="list.images[0].url"
         width="40"
         height="40"
-        class="object-cover aspect-square rounded"
+        class="object-cover rounded aspect-square"
       />
       
-      <div class="grow flex items-center justify-between p-2 gap-2 overflow-hidden">
-        <label :for="list.id" class="truncate w-full">{{ list.name }}</label>
+      <div class="flex items-center justify-between gap-2 p-2 overflow-hidden grow">
+        <label :for="list.id" class="w-full truncate">{{ list.name }}</label>
         <BaseInputCheckbox
           v-model="selectedPlaylists"
           @change="onChange(list.id, list.name)"

@@ -20,10 +20,7 @@ element.addEventListener("load", () => {
   let diffGreen = startG - 255;
   let diffBlue =  startB - 255;
 
-  console.log(diffRed, diffGreen, diffBlue)
-
   let step = 1 / trail.length;
-  console.log("step", step);
 
   trail.forEach((block, index) => {
     let newRed   = Math.floor((diffRed   * (step * index)) + startR);
