@@ -8,7 +8,9 @@ import {
   SRGBColorSpace,
   TextureLoader,
 } from "three";
+// @ts-expect-error
 import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
+// @ts-expect-error
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { trail } from "./game";
 
